@@ -1,0 +1,219 @@
+/* Author: Javier Vargas
+ * Date: July 13, 2022 4:23 pm
+ * Purpose: Appointment class 
+ */
+
+package pkg7_12_22_18a_project_v1;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import java.util.Random;
+
+public class Appointment {
+    /*
+        "Date[][]" 2d-array to hold the dates in a month (12th, 22nd, 30th). "day[][]" to match the dates with a day.
+        "month" holds the month the user wants to visit. "week[]" holds the days in a week, excluding Sunday. "time" holds the
+        time scheduled for the the visit. "appt" holds the users choice in selecting a date to vist.
+        "today" holds the index of "week[]" to determine what day the user has selected.
+    */
+    private String date[][] = new String[12][16], day[][] = new String[12][16], month, week[] = new String[6], time, appt;
+    int today;
+
+    //Constructor to fill "week[]" and call setDay() function
+    Appointment () {
+        appt = "";
+        week[0] = "Monday";
+        week[1] = "Tuesday";
+        week[2] = "Wednesday";
+        week[3] = "Thursday";
+        week[4] = "Friday";
+        week[5] = "Saturday";
+        setDay();        
+    }
+    
+    //Randomly generates available dates in a month for a total of 16 days per month.
+    private void setDay() {
+        Random rand = new Random();
+        String temp;
+        int limit, d = 0;
+        for (int i = 0; i < 12; i++) {
+            switch (i) {
+                case 1: { limit = 28; break; }
+                case 3:
+                case 5:
+                case 8:
+                case 10: { limit = 30; break; }
+                default: limit = 31;                    
+            }
+            for (int j = 0; j < 16; j++)  {
+                do {
+                    temp = String.valueOf(rand.nextInt(limit) +1);
+                } while(!(chckDay(date, temp, i, j, d)));
+                date[i][j] = temp;
+            }
+            sort(date, i);
+        }
+    }
+    
+    //Sorts the days stored in date[][] to match a day of the week. (Meaning if the first date is the 3rd, it will be a monday, and the next available date will follow after monday.)
+    private void sort(String s[][], int a) {
+        for (int k = 0; k < 16; k++)
+            for (int j = k; j < 16; j++)
+                if (Integer.parseInt(date[a][k]) > Integer.parseInt(date[a][j])) {
+                    String swap = date[a][k];
+                    date[a][k] = date[a][j];
+                    date[a][j] = swap;
+                }
+        for (int i = 0; i < 16; i++) { 
+            sunday(date[a][i]);
+            day[a][i] = week[today];
+        }
+    }
+    
+    //Checks to see if the randomly generated date has already been entered into "date[][]"
+    private boolean chckDay(String s[][], String b, int a, int c, int d) {
+        int count = 1, val = Integer.parseInt(b);
+        for (int i = 0; i < c; i++) {
+            if (s[a][i].equals(b)) return false; 
+        }
+        return (!(sunday(b)))? false : true;
+    }   
+    //Checks to see if the date generated falls on a Sunday, in which case the date cannot be used.
+    private boolean sunday(String s) {
+        int count = 1, val = Integer.parseInt(s), d = 0;
+        while (count < val) {
+            d = (d == 6)? 0 : d+1;
+            count++;
+        }
+        today = d;
+        return (d >= 6)? false : true;
+    }   
+    
+    //Asks the user for the month in which they'd like to visit
+    void setAppt() {
+        do {
+            month = JOptionPane.showInputDialog("Please enter the month in which you'd like to vist: ");
+        } while(!(chckMth(month)));                         
+    }   
+    
+    //Input validation for the month
+    private boolean chckMth(String s) {
+        switch (s) {
+            case "January":   { getDate(0);  break; }
+            case "February":  { getDate(1);  break; }
+            case "March":     { getDate(2);  break; }
+            case "April":     { getDate(3);  break; }
+            case "May":       { getDate(4);  break; }
+            case "June":      { getDate(5);  break; }
+            case "July":      { getDate(6);  break; }
+            case "August":    { getDate(7);  break; }
+            case "September": { getDate(8);  break; }
+            case "October":   { getDate(9);  break; }
+            case "November":  { getDate(10); break; }
+            case "December":  { getDate(11); break; }
+            default: {
+                JOptionPane.showMessageDialog(null, "That month doesn't exist!\n");
+                return false;
+            }
+        }
+        return true;
+    }        
+    
+    //Shows the user all dates in that month and gets their input
+    private void getDate(int a) {
+        JOptionPane.showMessageDialog(null, "\tHere are all the available days during the month of "+month+".\n");
+        boolean check = false;
+        String choice;
+        
+        do {
+            appt = JOptionPane.showInputDialog(day[a][0]+",  "+month+" "+date[a][0]+"          "+day[a][1]+", "+month+" "+date[a][1]+"\n"+
+                                               day[a][2]+",  "+month+" "+date[a][2]+"      "+day[a][3]+", "+month+" "+date[a][3]+"\n"+   
+                                               day[a][4]+",  "+month+" "+date[a][4]+"           "+day[a][5]+", "+month+" "+date[a][5]+"\n"+
+                                               day[a][6]+",  "+month+" "+date[a][6]+"          "+day[a][7]+", "+month+" "+date[a][7]+"\n"+
+                                               day[a][8]+",  "+month+" "+date[a][8]+"         "+day[a][9]+", "+month+" "+date[a][9]+"\n"+
+                                               day[a][10]+",  "+month+" "+date[a][10]+"         "+day[a][10]+", "+month+" "+date[a][11]+"\n"+
+                                               day[a][12]+",  "+month+" "+date[a][12]+"       "+day[a][13]+", "+month+" "+date[a][13]+"\n"+
+                                               day[a][14]+",  "+month+" "+date[a][14]+"        "+day[a][15]+", "+month+" "+date[a][15]
+                                               +"\n\n\n Please enter the date you'd like to vist. For example, 12 or 20.");
+            for (int i = 0; i < 16; i++) {
+                if (appt.equals(date[a][i])) {     
+                    check = true;
+                    appt = day[a][i]+", "+month+" "+date[a][i];          
+                    break;
+                }
+            }
+            if (!check) JOptionPane.showMessageDialog(null, "Invalid date. Please enter one of the available dates.");
+        } while(!check);
+    }
+    
+    //Asks for and stores the users selected time
+    void getTime() {
+        int size = (appt.contains("Saturday"))? 17 : 23, count = 8;
+        String format, show = "", zone;
+        boolean check = false;
+        
+        for (int i = 0; i < size; i++) {
+            count = (i==10)? 1 : (i > 0 && i % 2 == 0)? count + 1 : count;
+            zone = (i > 7)? " pm" : " am";
+            if (i > 1 && i % 2 == 0) show += "\n";
+            format = (i % 2 == 0)? ":00" : ":30";
+            show += String.valueOf(count) + format + zone + "    ";           
+        }
+        do {
+            JOptionPane.showMessageDialog(null, "Here are all available times. Please pick one of the following.");
+            time = JOptionPane.showInputDialog(show);
+            if (!(show.contains(time))) 
+                JOptionPane.showMessageDialog(null, "Invalid time entered.");
+            else {
+                String choice = JOptionPane.showInputDialog("You chose "+time+". Is this correct? Enter \"Yes\" if yes, anything else if to select different time.");
+                if (choice.toUpperCase().equals("YES"))
+                    check = true;
+            };
+        } while(!check);      
+        JOptionPane.showMessageDialog(null, "Details of your appointment can be found under the text file : \"ApptInfo\"");
+    }
+    
+    //Cancels the appointment if the user decides to cancel
+    void cancel() {
+        if (appt.isBlank()) {
+            JOptionPane.showMessageDialog(null, "No appointment has been scheduled.");
+            return;
+        }
+        String s = JOptionPane.showInputDialog("Are you sure you want to cancel your appointment? Enter \"Yes\" if yes, anything else if not.");
+        if (s.toUpperCase().equals("YES")) {
+            time = appt = "";
+            toFile("x","x","x",false);
+        }
+    }
+    
+    //Writes the appointment data to a file
+    void toFile(String n, String p, String em, boolean b) {
+        String fileContent;
+        if (!b)
+            fileContent = " ";
+        else
+            fileContent = "             -----------Appointment Details-----------\nName: "+n+"\nPhone Number: "+p+"\nEmail: "+em+
+                                        "\n\n"+"Appointment Date: "+appt+"\nTime: "+time;
+        FileOutputStream outputStream = null;
+ 
+        try {
+            outputStream = new FileOutputStream("ApptInfo.txt");
+            byte[] strToBytes = fileContent.getBytes();
+            outputStream.write(strToBytes);
+        }
+        catch (IOException e) {
+            System.out.print(e.getMessage());
+        }
+        finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                }
+                catch (IOException e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        }
+    }
+}
