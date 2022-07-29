@@ -1,0 +1,105 @@
+package pkg7_12_22_18a_project_v1;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+
+class Monetary implements Donation {
+    //"type" holds the donation type. "amount" holds the amount of money the user wants to donate.
+    String type, amount;
+    
+    //Constructor to initialize type
+    Monetary() {
+        type = "Monetary";
+    }
+    
+    //Gets the donation from the user
+    public void setDonation() {
+        boolean check;
+        String veri;
+        JOptionPane.showMessageDialog(null, "Thank you for choosing to give a monetary donation.\n");
+        do {
+            check = false;
+            amount = JOptionPane.showInputDialog("We only accept exact amounts such as $12 or $20, no cents.\nHow much would you like to donate? Enter \"Cancel\" to cancel the donation.");
+            if (amount.toUpperCase().equals("CANCEL")) {
+                JOptionPane.showMessageDialog(null, "Donation has been canceled.");
+                return;
+            }
+            try {  
+                Double.parseDouble(amount);  
+                check = true;
+            } 
+            catch(NumberFormatException e) {  
+                if (amount.startsWith("$")) {
+                    check = true;
+                    amount = amount.replace("$", "");
+                }
+            }  
+            if (check) {
+                veri = JOptionPane.showInputDialog("Donation amount: $"+getDonation()+"\n Is this correct? Enter \"Yes\" if yes, anything else if you'd like to make a change.");
+                if (!(veri.toUpperCase().equals("YES")))
+                    check = false;
+                else
+                    JOptionPane.showMessageDialog(null, "Thank you very much for the donation.");
+            }
+        } while(!check);
+    }
+    
+    //Returns donation type
+    public String getType() {
+        return type;
+    }
+    
+    //Returns donation 
+    public String getDonation() {
+        if ((blank())) {
+            JOptionPane.showMessageDialog(null, "No donation has been registered to this user.");
+            return "";
+        }
+        return amount;
+    }
+    
+    //Checks to see if the user has donated anything
+    public boolean blank() {
+        return (amount.isBlank())? true : false;
+    }
+    
+    //Writes donation data to file
+    public void toFile(String n, String p, String em) {
+        // Assign the file content
+        String fileContent;
+        if (blank())
+            return;
+        else
+            fileContent = "          -----------Donation Receipt-----------\n"+n+"\n"+em+"\n"+p+"\n\nDonation Type: "+getType()+"\nAmount: "+getDonation();
+        FileOutputStream outputStream = null;
+ 
+        // Try block to check if exception occurs
+        try {
+ 
+            // Step 1:  Create an object of FileOutputStream
+            outputStream = new FileOutputStream("mRecepit.txt");
+ 
+            // Step 2: Store byte content from string
+            byte[] strToBytes = fileContent.getBytes();
+ 
+            // Step 3: Write into the file
+            outputStream.write(strToBytes);
+        }
+ 
+        // Catch block to handle the exception
+        catch (IOException e) {
+            System.out.print(e.getMessage());
+        }
+        finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                }
+                catch (IOException e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        }
+    }   
+}
