@@ -1,0 +1,9 @@
+package pkg7_12_22_18a_project_v1;
+
+public interface Donation {
+    void setDonation(); //Sets the donation
+    String getType();   //Gets the donation type, either Monetary or Material
+    String getDonation();   //Returns the donation entered
+    void toFile(String n, String p, String em); //Writes donation data to file
+    boolean blank();    //Checks to see if the user has a donation registered to them.
+}
