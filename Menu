@@ -1,0 +1,24 @@
+package pkg7_12_22_18a_project_v1;
+
+import javax.swing.JOptionPane;
+
+public class Menu extends Contact_Info{
+    //Menu to determine what the user wants to do
+    String Options() {
+        String choice = JOptionPane.showInputDialog("Enter the number beside the option you want to choose.\n"
+                + "1. Make an Appointment.\n2. Make a Donation.\n3. Cancel Donation.\n4. Cancel Appointment.\n5. Exit.");
+        return choice;
+    }
+    
+    //Determines what type of donation the user wants to make
+    String Donation() {
+        String d = JOptionPane.showInputDialog("Enter \"MAT\" to make a material donation, or enter \"MON\" to make a monetary donation."
+                + "\nEnter \"Cancel to cancel the donation.");
+        return d.toUpperCase();
+    }
+    
+    //In case the user doesn't choose a material or monetary donation.
+    void dError() {
+        JOptionPane.showMessageDialog(null, "Invalid option entered.");
+    }
+}
