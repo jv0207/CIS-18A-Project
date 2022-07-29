@@ -1,1 +1,105 @@
 
+package pkg7_12_22_18a_project_v1;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+
+class Material implements Donation{
+    //"type" holds the donation type. "item" holds the donation item. 
+    //"list[]" holds the list of items available to donate.
+    String type, item, list[] = new String[10];
+    
+    //Constructor to initialize the list, type, and item.
+    Material() {
+        item = " ";
+        type = "Material";
+        list[0] = "Seeds";
+        list[1] = "Shovels";
+        list[2] = "Gloves";
+        list[3] = "Soil";
+        list[4] = "Fertilizer";
+        list[5] = "Boots";
+        list[6] = "Umbrellas";
+        list[7] = "Brooms";
+        list[8] = "Rakes";
+        list[9] = "Hedge Shears";
+    }
+    
+    //Returns the donation type
+    public String getType() {
+        return type;
+    }
+    
+    //Gets the donation from the user
+    public void setDonation() {
+        boolean check = false;
+        JOptionPane.showMessageDialog(null, "Thank you for choosing to give a donation.\n"+
+                                      "Here is a list of all materials we are currently accepting.");
+        do {
+            item = JOptionPane.showInputDialog("Seeds             Soil\nFertilizer         Shovels\nGloves             Boots\nUmbrellas      Brooms\n"
+                    + "Rakes             Hedge Shears\n\n Please enter the item you'd like to donate or enter \"Cancel\" to cancel.");
+            if (item.toUpperCase().equals("CANCEL")) return;;
+            for (int i = 0; i < list.length; i++)
+                if (item.toUpperCase().equals(list[i].toUpperCase())) check = true;
+            if (!check) JOptionPane.showMessageDialog(null, "We apologize but we aren't accepting that item at this time. Please "
+                    + "choose an item from the list.");
+        } while(!check);
+        JOptionPane.showMessageDialog(null, "Thank you for the donation. A receipt of the donation can be found under the text file: \"mReceipt.txt\"");
+    }
+    
+    //Returns the donation 
+    public String getDonation() {
+        if (blank()) {JOptionPane.showMessageDialog(null, "No donation has been registered to this user."); return "";}
+        return item;
+    }
+    
+    //In case the user wants to cancel the donation
+    void cancel() {
+        if (blank()) 
+            JOptionPane.showMessageDialog(null, "No donation has been registered to this user.");
+        else {
+            String check = JOptionPane.showInputDialog("Are you sure you want to cancel? Enter \"Yes\" if yes, anything else if not.");
+            if (check.toUpperCase().equals("YES")) {item = " "; toFile("x","x","x");}
+            JOptionPane.showMessageDialog(null, "Donation has been cancelled.");
+        }
+    }
+    
+    //Writes donation data to file
+    public void toFile(String n, String p, String em) {
+        String fileContent;
+        if (blank())
+            fileContent = " ";
+        else
+            fileContent = "          -----------Donation Receipt-----------\nName: "+n+"\nEmail: "+em+"\nPhone: "+p+"\n\nDonation Type: "+getType()+"\nItem: "+item;
+        FileOutputStream outputStream = null;
+ 
+        try {
+ 
+            outputStream = new FileOutputStream("mRecepit.txt");
+ 
+            byte[] strToBytes = fileContent.getBytes();
+ 
+            outputStream.write(strToBytes);
+        }
+ 
+        catch (IOException e) {
+            System.out.print(e.getMessage());
+        }
+        finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                }
+                catch (IOException e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        }
+    }
+    
+    //Checks if item is blank, or if the user has yet to choose a donation item.
+    public boolean blank() {
+        return (item.isBlank())? true : false;
+    }
+}
