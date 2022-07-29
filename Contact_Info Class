@@ -1,0 +1,34 @@
+package pkg7_12_22_18a_project_v1;
+
+import javax.swing.JOptionPane;
+
+public class Contact_Info {
+    //Variables to hold their name equivalent in data
+    private String name, phone, email;
+    
+    //Prompts the user to register 
+    void setInfo() {
+        JOptionPane.showMessageDialog(null, "Welcome! This program is for the MVC Public Community Garden.");
+        JOptionPane.showMessageDialog(null, "Here you'll be able to schedule an appointment to come and visit, as well as"
+                + " give donations.");
+        do {name = JOptionPane.showInputDialog("To begin, please enter your name.");} while(name.isBlank());
+        do {phone = JOptionPane.showInputDialog("Now enter your phone number. (Ex. 9999999999)");} while(phone.isBlank());
+        do {email = JOptionPane.showInputDialog("Lastly, enter your email address.");} while(email.isBlank());
+        JOptionPane.showMessageDialog(null, "Thank you for registering.");
+    }
+    
+    //Returns name
+    String getName() {
+        return name;
+    }
+    
+    //Returns phone number
+    String getPhone() {
+        return phone;
+    }
+ 
+    //Returns email
+    String getEmail() {
+        return email;
+    }
+}
