@@ -1,0 +1,49 @@
+/*  Author: Javier Vargas
+ *  Date: July 12, 2022 8:49 pm
+ *  Purpose: CIS 18A Project - Option 2
+ */
+
+
+package pkg7_12_22_18a_project_v1;
+
+import javax.swing.JOptionPane;
+
+public class Main {
+    public static void main(String[] args) {
+        Menu m = new Menu();    //Menu object
+        Appointment a = new Appointment();  //Appointment object
+        Material mat = new Material();  //Material object
+        Monetary mon = new Monetary();  //Monetary object 
+        String s;   //String to hold the users input
+        boolean end = false;    //Boolean to know when to end program
+        m.setInfo();    //Registration prompt 
+        //Do-While to serve as menu and will continue until end of program
+        do {
+            s = m.Options();
+            switch (s) {
+            case "1": {a.setAppt(); a.getTime(); a.toFile(m.getName(), m.getPhone(), m.getEmail(), true); break;}   //Case to set appointment
+            case "2": { //Case to make a donation
+                boolean b = false;
+                do {
+                    s = m.Donation();
+                    switch (s) {
+                        //Monetary Donation
+                        case "MON": {b = true; mon.setDonation(); mon.toFile(m.getName(), m.getPhone(), m.getEmail()); break;}
+                        //Material Donation
+                        case "MAT": {b = true; mat.setDonation(); mat.toFile(m.getName(), m.getPhone(), m.getEmail()); break;}
+                        //Cancel Donation
+                        case "CANCEL": {b = true; break;}
+                        //Input validation
+                        default: m.dError();
+                    };
+                } while(!b);
+            break;
+            }
+            case "3": {mat.cancel(); break;}    //Case to cancel a donation
+            case "4": {a.cancel(); break;}      //Case to cancel an appointment
+            case "5": {end = true; break;}      //Case to end program
+            default: JOptionPane.showMessageDialog(null, "That option doesn't exist!");     //Input validation
+            }
+        } while(!end);
+    }   
+}
