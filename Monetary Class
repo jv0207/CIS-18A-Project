@@ -66,28 +66,18 @@ class Monetary implements Donation {
     
     //Writes donation data to file
     public void toFile(String n, String p, String em) {
-        // Assign the file content
         String fileContent;
         if (blank())
             return;
         else
             fileContent = "          -----------Donation Receipt-----------\n"+n+"\n"+em+"\n"+p+"\n\nDonation Type: "+getType()+"\nAmount: "+getDonation();
         FileOutputStream outputStream = null;
- 
-        // Try block to check if exception occurs
+
         try {
- 
-            // Step 1:  Create an object of FileOutputStream
             outputStream = new FileOutputStream("mRecepit.txt");
- 
-            // Step 2: Store byte content from string
             byte[] strToBytes = fileContent.getBytes();
- 
-            // Step 3: Write into the file
             outputStream.write(strToBytes);
         }
- 
-        // Catch block to handle the exception
         catch (IOException e) {
             System.out.print(e.getMessage());
         }
